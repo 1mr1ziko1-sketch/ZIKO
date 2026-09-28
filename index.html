@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pen</title>
+  </head>
+  <body>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>زيكو ستور | Ziko Store 🎮</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo-wrapper">
+        <i class="fa-solid fa-gamepad logo-icon"></i>
+        <h1>زيكو ستور <span>Ziko Store</span></h1>
+      </div>
+      <p class="subtitle">منصتك الموثوقة لشحن كافة الألعاب والأرصدة بسرعة وأمان</p>
+    </header>
+
+    <main>
+      <!-- 1. قسم اختيار اللعبة -->
+      <section class="card">
+        <h2><i class="fa-solid fa-list-check"></i> 1. اختر اللعبة</h2>
+        <div class="grid-games" id="gamesGrid"></div>
+      </section>
+
+      <!-- 2. قسم تفاصيل الطلب -->
+      <section class="card">
+        <h2><i class="fa-solid fa-cart-shopping"></i> 2. تفاصيل الحساب والشحن</h2>
+        
+        <div class="form-group">
+          <label for="userId"><i class="fa-solid fa-id-card"></i> المعرف (ID) أو اسم المستخدم في اللعبة:</label>
+          <input type="text" id="userId" placeholder="أدخل ID اللعبة هنا..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="packageSelect"><i class="fa-solid fa-box-open"></i> اختر الباقة المطلوبة:</label>
+          <select id="packageSelect">
+            <option value="">-- اختر اللعبة أولاً --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-solid fa-wallet"></i> طريقة الدفع والمعلومات الخاصّة بها:</label>
+          <div class="payment-options">
+            <label class="pay-card">
+              <input type="radio" name="payment" value="شام كاش" checked>
+              <div class="pay-info">
+                <strong>شام كاش (Sham Cash)</strong>
+                <small>9254dfdc250f4e61839de5bb1de76691</small>
+              </div>
+            </label>
+            <label class="pay-card">
+              <input type="radio" name="payment" value="سيرياتيل كاش">
+              <div class="pay-info">
+                <strong>سيرياتيل كاش (Syriatel Cash)</strong>
+                <small>0994287303</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="senderInfo"><i class="fa-solid fa-receipt"></i> رقم المحفظة التي حولت منها / رقم العملية:</label>
+          <input type="text" id="senderInfo" placeholder="أدخل رقم العملية أو الرقم المحول منه">
+        </div>
+
+        <div class="form-group">
+          <label for="receiptImage"><i class="fa-solid fa-file-image"></i> إرفاق صورة إشعار / لقطة الشاشة للعملية 📸:</label>
+          <input type="file" id="receiptImage" accept="image/*">
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
+          <i class="fa-brands fa-whatsapp"></i> تأكيد وإرسال عبر الواتساب
+        </button>
+      </section>
+
+      <!-- 3. لوحة الإدارة -->
+      <section class="card admin-section">
+        <h2><i class="fa-solid fa-user-shield"></i> لوحة تحكم الأدمن (خاصة بالمالك)</h2>
+        
+        <div id="adminAuth">
+          <p class="admin-desc">أدخل كلمة السر لعرض الطلبات وتعديل أسعار الباقات:</p>
+          <div class="admin-login-box">
+            <input type="password" id="adminPassInput" placeholder="أدخل كلمة السر هنا...">
+            <button class="btn-action" onclick="loginAdmin()">دخول <i class="fa-solid fa-right-to-bracket"></i></button>
+          </div>
+        </div>
+
+        <div id="adminContent" class="hidden">
+          <div class="admin-header">
+            <span class="welcome-text">مرحباً بك يا زيكو! 👋</span>
+            <div class="admin-btns">
+              <button class="btn-action btn-danger" onclick="clearOrders()"><i class="fa-solid fa-trash"></i> مسح كافة السجلات</button>
+              <button class="btn-secondary" onclick="logoutAdmin()"><i class="fa-solid fa-lock"></i> تسجيل الخروج</button>
+            </div>
+          </div>
+
+          <!-- تعديل الأسعار -->
+          <div class="price-edit-box">
+            <h3><i class="fa-solid fa-tags"></i> تعديل أسعار الباقات</h3>
+            <div class="price-edit-inputs">
+              <select id="adminGameSelect" onchange="loadAdminPackages()"></select>
+              <select id="adminPackageSelect"></select>
+              <input type="text" id="adminPriceInput" placeholder="السعر الجديد (مثال: 50,000 ل.س)">
+              <button class="btn-action btn-success" onclick="updatePrice()">حفظ السعر <i class="fa-solid fa-floppy-disk"></i></button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> سجل الطلبات</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>التاريخ والوقت</th>
+                  <th>اللعبة</th>
+                  <th>ID العميل</th>
+                  <th>الباقة والسعر</th>
+                  <th>طريقة الدفع</th>
+                  <th>رقم العملية</th>
+                  <th>صورة العملية</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
